@@ -43,8 +43,13 @@ router.post('/', function(req, res, next) {
     });
 });
 
-router.get('/:id', function(req, res, next) {
-  var sql = ``;
+router.get('/:userId', function(req, res, next) {
+  var sql = `select a.ID_TAGIHAN,a.HARGA,b.NAMA as NAMA_PELANGGAN, c.NAMA as NAMA_LAYANAN from tagihan a
+  left join pelanggan b
+  on a.NCLI = b.NCLI
+  left join layanan c
+  on a.ID_LAYANAN = c.ID_LAYANAN
+  where b.NO_TELEPON='`+ req.params.userId+`' or b.NO_INTERNET='`+ req.params.userId+`' and a.\`STATUS\` = 0`;
   
     connection.query(sql, function (err, rows, fields) {
       if (err) throw err
