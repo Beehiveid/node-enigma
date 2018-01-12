@@ -18,10 +18,64 @@ router.get('/', function(req, res, next) {
   on a.ID_LAYANAN = c.ID_LAYANAN
   where a.\`STATUS\` = 0
   order by b.NCLI`;
-  console.log("SQL:"+sql);
+  
     connection.query(sql, function (err, rows, fields) {
       if (err) throw err
       res.json(rows);
     });
   });
+
+router.get('/create', function(req, res, next) {
+  var sql = ``;
+  
+    connection.query(sql, function (err, rows, fields) {
+      if (err) throw err
+      res.json(rows);
+    });
+});
+
+router.post('/', function(req, res, next) {
+  var sql = ``;
+  
+    connection.query(sql, function (err, rows, fields) {
+      if (err) throw err
+      res.json(rows);
+    });
+});
+
+router.get('/:id', function(req, res, next) {
+  var sql = ``;
+  
+    connection.query(sql, function (err, rows, fields) {
+      if (err) throw err
+      res.json(rows);
+    });
+});
+
+router.get('/:id/edit', function(req, res, next) {
+  var sql = ``;
+  
+    connection.query(sql, function (err, rows, fields) {
+      if (err) throw err
+      res.json(rows);
+    });
+});
+
+router.put('/:id', function(req, res, next) {
+  var sql = ``;
+  
+    connection.query(sql, function (err, rows, fields) {
+      if (err) throw err
+      res.json(rows);
+    });
+});
+
+router.delete('/:id', function(req, res, next) {
+  var sql = ``;
+  
+    connection.query(sql, function (err, rows, fields) {
+      if (err) throw err
+      res.json(rows);
+    });
+});
 module.exports = router;
