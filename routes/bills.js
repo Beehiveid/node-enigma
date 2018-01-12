@@ -11,7 +11,15 @@ var connection = mysql.createConnection({
 });
 
 router.get('/', function(req, res, next) {
-    connection.query('SELECT * from heroes', function (err, rows, fields) {
+  var sql = `select a.ID_TAGIHAN,a.HARGA, b.NAMA,c.NAMA as TIPE_LAYANAN from tagihan a
+  left join pelanggan b
+  on a.NCLI = b.NCLI 
+  left join layanan c
+  on a.ID_LAYANAN = c.ID_LAYANAN
+  where a.\`STATUS\` = 0
+  order by b.NCLI`;
+  console.log("SQL:"+sql);
+    connection.query(sql, function (err, rows, fields) {
       if (err) throw err
       res.json(rows);
     });

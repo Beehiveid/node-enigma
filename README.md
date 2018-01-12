@@ -2,10 +2,10 @@
 
 | No | Verb | Path | Action |
 |----|------|------|--------|
-| 1. |  GET | /bill| INDEX  | 
-| 2. |  GET | /bill/create| CREATE  | 
-| 3. |  POST | /bill| STORE  | 
-| 4. |  GET | /bill/{billID} | SHOW  | 
-| 5. |  GET | /bill/{billID}/edit| EDIT  | 
-| 6. |  PUT | /bill/{billID}| UPDATE  | 
-| 7. |  DELETE | /bill/{billID}| DELETE  |
+| 1. |  GET | /bills| INDEX  | 
+| 2. |  GET | /bills/create| CREATE  | 
+| 3. |  POST | /bills| STORE  | 
+| 4. |  GET | /bills/{billID} | SHOW  | 
+| 5. |  GET | /bills/{billID}/edit| EDIT  | 
+| 6. |  PUT | /bills/{billID}| UPDATE  | 
+| 7. |  DELETE | /bills/{billID}| DELETE  |
