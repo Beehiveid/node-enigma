@@ -8,7 +8,7 @@ var dotenv = require('dotenv').config();
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-var payment = require('./routes/payment');
+var bills = require('./routes/bills');
 
 var app = express();
 
@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/payment', payment);
+app.use('/bills', bills);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
