@@ -9,3 +9,4 @@
 | 5. |  GET | /bills/{billID}/edit| EDIT  | No |
 | 6. |  PUT | /bills/{billID}| UPDATE  | No |
 | 7. |  DELETE | /bills/{billID}| DELETE  | No |
+| 7. |  POST | /bills/paybills | PAY  | Yes |
