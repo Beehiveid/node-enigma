@@ -93,8 +93,6 @@ router.post('/paybills', function(req, res, next) {
   var sql = `update tagihan set STATS = ?
   ,TGL_BAYAR = ? where ID_TAGIHAN in ` + idx;
 
-  //var sql = "update tagihan set STATS = " + stats + " TGL_BAYAR = '"+now+"' where ID_TAGIHAN in " + idx;
-  console.log(sql);
     connection.query(sql,[stats,now], function (err, rows, fields) {
       if (err) throw err
       res.json(rows);
