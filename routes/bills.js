@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 var dotenv = require('dotenv').config({path: '../.env'});
+var moment = require('moment')
 
 var connection = mysql.createConnection({
   host     : process.env.DB_HOST,
@@ -16,7 +17,7 @@ router.get('/', function(req, res, next) {
   on a.NCLI = b.NCLI 
   left join layanan c
   on a.ID_LAYANAN = c.ID_LAYANAN
-  where a.\`STATUS\` = 0
+  where a.STATS = 0
   order by b.NCLI`;
   
     connection.query(sql, function (err, rows, fields) {
@@ -49,7 +50,7 @@ router.get('/:userId', function(req, res, next) {
   on a.NCLI = b.NCLI
   left join layanan c
   on a.ID_LAYANAN = c.ID_LAYANAN
-  where b.NO_TELEPON='`+ req.params.userId+`' or b.NO_INTERNET='`+ req.params.userId+`' and a.\`STATUS\` = 0`;
+  where b.NO_TELEPON='`+ req.params.userId+`' or b.NO_INTERNET='`+ req.params.userId+`' and a.STATS = 0`;
   
     connection.query(sql, function (err, rows, fields) {
       if (err) throw err
@@ -82,5 +83,20 @@ router.delete('/:id', function(req, res, next) {
       if (err) throw err
       res.json(rows);
     });
+});
+
+router.post('/paybills', function(req, res, next) {
+  idx = "("+req.body.id.join()+")";
+  stats = req.body.status;
+  var now = moment().format("YYYY-M-DD HH:mm:ss");
+
+  var sql = `update tagihan set STATS = ?
+  ,TGL_BAYAR = ? where ID_TAGIHAN in ` + idx;
+
+    connection.query(sql,[stats,now], function (err, rows, fields) {
+      if (err) throw err
+      res.json(rows);
+    });
+  
 });
 module.exports = router;
