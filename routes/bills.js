@@ -16,7 +16,7 @@ router.get('/', function(req, res, next) {
   on a.NCLI = b.NCLI 
   left join layanan c
   on a.ID_LAYANAN = c.ID_LAYANAN
-  where a.\`STATUS\` = 0
+  where a.STATS = 0
   order by b.NCLI`;
   
     connection.query(sql, function (err, rows, fields) {
@@ -49,7 +49,7 @@ router.get('/:userId', function(req, res, next) {
   on a.NCLI = b.NCLI
   left join layanan c
   on a.ID_LAYANAN = c.ID_LAYANAN
-  where b.NO_TELEPON='`+ req.params.userId+`' or b.NO_INTERNET='`+ req.params.userId+`' and a.\`STATUS\` = 0`;
+  where b.NO_TELEPON='`+ req.params.userId+`' or b.NO_INTERNET='`+ req.params.userId+`' and a.STATS = 0`;
   
     connection.query(sql, function (err, rows, fields) {
       if (err) throw err
