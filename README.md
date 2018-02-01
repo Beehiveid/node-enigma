@@ -9,5 +9,5 @@
 | 5. |  GET | /bills/{billID}/edit| EDIT  | No |
 | 6. |  PUT | /bills/{billID}| UPDATE  | No |
 | 7. |  DELETE | /bills/{billID}| DELETE  | No |
-| 7. |  POST | /bills/paybills | PAY  | Yes |
-| 4. |  GET | /bills/{userID}/9 | QUEUED BILLS  | Yes |
+| 8. |  POST | /bills/paybills | PAY  | Yes |
+| 9. |  GET | /bills/{userID}/9 | QUEUED BILLS  | Yes |
