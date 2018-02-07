@@ -113,6 +113,7 @@ router.delete('/:id', function(req, res, next) {
 });
 
 router.post('/paybills', function(req, res, next) {
+  console.log("node paybills");
   idx = "("+req.body.id.join()+")";
   stats = req.body.status;
   var now = moment().format("YYYY-M-DD HH:mm:ss");
