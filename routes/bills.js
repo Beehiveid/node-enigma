@@ -60,7 +60,7 @@ router.get('/:userId', function(req, res, next) {
 
 router.get('/:userId/:stats', function(req, res, next) {
   var group = {};
-  console.log("S:getQueuedBill called");
+  console.log("node getBills");
   var sql = `select a.ID_TAGIHAN,a.HARGA,b.NCLI,b.NAMA as NAMA_PELANGGAN, c.NAMA as NAMA_LAYANAN from tagihan a
   left join pelanggan b
   on a.NCLI = b.NCLI
