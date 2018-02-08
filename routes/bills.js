@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 var dotenv = require('dotenv').config({path: '../.env'});
-var moment = require('moment')
+var moment = require('moment');
+var debug = require('debug')("node-enigma:bills")
 
 var connection = mysql.createConnection({
   host     : process.env.DB_HOST,
@@ -60,7 +61,7 @@ router.get('/:userId', function(req, res, next) {
 
 router.get('/:userId/:stats', function(req, res, next) {
   var group = {};
-  console.log("S:getQueuedBill called");
+  debug("get getBills");
   var sql = `select a.ID_TAGIHAN,a.HARGA,b.NCLI,b.NAMA as NAMA_PELANGGAN, c.NAMA as NAMA_LAYANAN from tagihan a
   left join pelanggan b
   on a.NCLI = b.NCLI
@@ -113,7 +114,7 @@ router.delete('/:id', function(req, res, next) {
 });
 
 router.post('/paybills', function(req, res, next) {
-  console.log("node paybills");
+  debug("post paybills");
   idx = "("+req.body.id.join()+")";
   stats = req.body.status;
   var now = moment().format("YYYY-M-DD HH:mm:ss");
