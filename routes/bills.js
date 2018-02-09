@@ -46,16 +46,38 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/:userId', function(req, res, next) {
-  var sql = `select a.ID_TAGIHAN,a.HARGA,b.NAMA as NAMA_PELANGGAN, c.NAMA as NAMA_LAYANAN from tagihan a
+  debug("get getUnpaidBill");
+  var group = {};
+  var sql = `select a.ID_TAGIHAN,a.HARGA,b.NAMA as NAMA_PELANGGAN, c.NAMA as NAMA_LAYANAN, b.NCLI,a.STATS from tagihan a
   left join pelanggan b
   on a.NCLI = b.NCLI
   left join layanan c
   on a.ID_LAYANAN = c.ID_LAYANAN
-  where b.NO_TELEPON='`+ req.params.userId+`' or b.NO_INTERNET='`+ req.params.userId+`' and a.STATS = 0`;
+  where b.NO_TELEPON='`+ req.params.userId+`' or b.NO_INTERNET='`+ req.params.userId+`' and a.STATS != 1`;
   
     connection.query(sql, function (err, rows, fields) {
+      if(rows.length > 0){
+        group.id = rows[0].NCLI;
+        group.nama = rows[0].NAMA_PELANGGAN;
+        group.totalIdle = 0;
+        group.totalQueue = 0;
+        group.idle = [];
+        group.queue = [];
+        for(var i = 0; i < rows.length; i++){
+          
+
+          if(rows[i].STATS){
+            group.queue.push(rows[i]);
+            group.totalQueue += rows[i].HARGA;
+          }else{
+            group.idle.push(rows[i]);
+            group.totalIdle += rows[i].HARGA;
+          }
+        }
+      }
+
       if (err) throw err
-      res.json(rows);
+      res.json(group);
     });
 });
 
