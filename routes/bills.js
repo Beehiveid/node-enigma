@@ -13,17 +13,31 @@ var connection = mysql.createConnection({
 });
 
 router.get('/', function(req, res, next) {
-  var sql = `select a.ID_TAGIHAN,a.HARGA, b.NAMA,c.NAMA as TIPE_LAYANAN from tagihan a
-  left join pelanggan b
-  on a.NCLI = b.NCLI 
-  left join layanan c
-  on a.ID_LAYANAN = c.ID_LAYANAN
-  where a.STATS = 0
-  order by b.NCLI`;
+  var group = {};
+  var sql = `select a.ID_TAGIHAN,a.HARGA,a.STATS,b.NCLI,b.NAMA as NAMA_PELANGGAN,b.ALAMAT,c.NAMA as NAMA_TAGIHAN from tagihan a 
+  join pelanggan b on a.NCLI = b.NCLI
+  join layanan c on a.ID_LAYANAN = c.ID_LAYANAN
+  where a.stats != 1`;
   
     connection.query(sql, function (err, rows, fields) {
+      for(var i = 0; i < rows.length;i++){
+        if(!group[rows[i].NCLI]){
+          group[rows[i].NCLI] = {};
+          group[rows[i].NCLI] = {
+            "nama":rows[i].NAMA_PELANGGAN,
+            "id":rows[i].NCLI,
+            "idle": [],
+            "queue": []
+          }
+        }
+        if(rows[i].STATS){
+          group[rows[i].NCLI].queue.push(rows[i]);
+        }else{
+          group[rows[i].NCLI].idle.push(rows[i]);
+        }
+      }
       if (err) throw err
-      res.json(rows);
+      res.json(group);
     });
   });
 
@@ -46,7 +60,7 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/:userId', function(req, res, next) {
-  debug("get getUnpaidBill");
+  debug("get getUnpaidBill of "+req.params.userId);
   var group = {};
   var sql = `select a.ID_TAGIHAN,a.HARGA,b.NAMA as NAMA_PELANGGAN, c.NAMA as NAMA_LAYANAN, b.NCLI,a.STATS from tagihan a
   left join pelanggan b
@@ -64,8 +78,6 @@ router.get('/:userId', function(req, res, next) {
         group.idle = [];
         group.queue = [];
         for(var i = 0; i < rows.length; i++){
-          
-
           if(rows[i].STATS){
             group.queue.push(rows[i]);
             group.totalQueue += rows[i].HARGA;
@@ -83,7 +95,7 @@ router.get('/:userId', function(req, res, next) {
 
 router.get('/:userId/:stats', function(req, res, next) {
   var group = {};
-  debug("get getBills");
+  debug("get getBills by "+req.params.userId+" with stats="+req.params.stats);
   var sql = `select a.ID_TAGIHAN,a.HARGA,b.NCLI,b.NAMA as NAMA_PELANGGAN, c.NAMA as NAMA_LAYANAN from tagihan a
   left join pelanggan b
   on a.NCLI = b.NCLI
