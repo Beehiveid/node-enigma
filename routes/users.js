@@ -7,3 +7,22 @@ router.get('/', function(req, res, next) {
 });
 
 module.exports = router;
+
+router.post('/login', function(req, res, next){
+  let obj = {};
+  if((req.body.username == 'nanda') && (req.body.password == '123456')){
+    obj = {
+      username : 'nanda',
+      password : '123456',
+      type : 'superuser',
+      login : true
+    }
+  }else{
+    obj = {
+      login : false,
+      message : 'Login failed'
+    }
+  }
+  console.log(req.body);
+  res.json(obj);
+})
