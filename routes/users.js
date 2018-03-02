@@ -3,6 +3,7 @@ var router = express.Router();
 var mysql = require('mysql');
 var dotenv = require('dotenv').config({path: '../.env'});
 var debug = require('debug')("node-enigma:users");
+var jwt = require('jsonwebtoken');
 
 var AccessLevel = {
   BANNED: 0,
@@ -27,8 +28,8 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.post('/login', function(req, res, next){
-  debug("post login");
+router.post('/auth', function(req, res, next){
+  debug("post auth");
   let username = req.body.username;
   let password = req.body.password;
   let obj = {};
@@ -44,20 +45,24 @@ router.post('/login', function(req, res, next){
         message : "Login failed"
       }
     }else{
-      obj = {
+      let payload = {
         fullname : user.fullname,
         department : user.department,
         access : AccessLevel.properties[user.status].name,
+      }
+
+      var token = jwt.sign(payload, process.env.SECRET,{
+        expiresIn: "1d"
+      });
+
+      obj = {
+        token : token,
         login : true
       }
     }
     console.log(obj);
     res.json(obj);
   });
-
-  
-  
-  
 });
 
 module.exports = router;

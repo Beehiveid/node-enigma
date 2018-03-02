@@ -3,7 +3,8 @@ var router = express.Router();
 var mysql = require('mysql');
 var dotenv = require('dotenv').config({path: '../.env'});
 var moment = require('moment');
-var debug = require('debug')("node-enigma:bills")
+var debug = require('debug')("node-enigma:bills");
+var jwt = require('jsonwebtoken');
 
 var connection = mysql.createConnection({
   host     : process.env.DB_HOST,
@@ -12,7 +13,29 @@ var connection = mysql.createConnection({
   database : process.env.DB_NAME
 });
 
+router.use(function(req, res, next){
+  debug("verify token");
+  let token = req.body.token || req.query.token || req.headers['token'];
+  if(token){
+    jwt.verify(token, process.env.SECRET, function(err, decoded){
+      if(err){
+        return res.json({ success: false, message: 'Failed to verify token.' });
+      }else{
+        req.decoded = decoded;
+        next();
+      }
+    })
+  }else{
+    return res.status(403).send({
+      success : false,
+      message : "No token provided"
+    });
+  }
+});
+
 router.get('/', function(req, res, next) {
+  debug("get Unpaid bills");
+  debug(req.decoded);
   var group = {};
   var sql = `select a.ID_TAGIHAN,a.HARGA,a.STATS,b.NCLI,b.NAMA as NAMA_PELANGGAN,b.ALAMAT,c.NAMA as NAMA_TAGIHAN from tagihan a 
   join pelanggan b on a.NCLI = b.NCLI
