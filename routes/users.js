@@ -56,6 +56,9 @@ router.post('/auth', function(req, res, next){
       });
 
       obj = {
+        fullname : user.fullname,
+        department : user.department,
+        access : AccessLevel.properties[user.status].name,
         token : token,
         login : true
       }
@@ -65,4 +68,29 @@ router.post('/auth', function(req, res, next){
   });
 });
 
+router.post('/verify', function(req, res, next){
+  debug("get verify");
+  let token = req.body.token || req.query.token || req.headers['token'];
+  if(token){
+    jwt.verify(token, process.env.SECRET, function(err, decoded){
+      if(err){
+        return res.json({ login: false, message: 'Failed to verify token.' });
+      }else{
+        let obj = {
+          fullname : decoded.fullname,
+          department : decoded.department,
+          access : decoded.access,
+          login : true
+        }
+
+        return res.json(obj);
+      }
+    })
+  }else{
+    return res.status(403).send({
+      login : false,
+      message : "No token provided"
+    });
+  }
+});
 module.exports = router;
