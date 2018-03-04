@@ -4,6 +4,7 @@ var mysql = require('mysql');
 var dotenv = require('dotenv').config({path: '../.env'});
 var debug = require('debug')("node-enigma:users");
 var jwt = require('jsonwebtoken');
+var moment = require('moment');
 
 var AccessLevel = {
   BANNED: 0,
@@ -60,7 +61,8 @@ router.post('/auth', function(req, res, next){
         department : user.department,
         access : AccessLevel.properties[user.status].name,
         token : token,
-        login : true
+        login : true,
+        expIn : 1 //1 days
       }
     }
     console.log(obj);
@@ -71,7 +73,9 @@ router.post('/auth', function(req, res, next){
 router.post('/verify', function(req, res, next){
   debug("get verify");
   let token = req.body.token || req.query.token || req.headers['token'];
-  if(token){
+  debug(token);
+  
+  if(token != "undefined"){
     jwt.verify(token, process.env.SECRET, function(err, decoded){
       if(err){
         return res.json({ login: false, message: 'Failed to verify token.' });
@@ -87,7 +91,7 @@ router.post('/verify', function(req, res, next){
       }
     })
   }else{
-    return res.status(403).send({
+    return res.send({
       login : false,
       message : "No token provided"
     });
