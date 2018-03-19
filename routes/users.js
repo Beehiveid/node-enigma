@@ -70,7 +70,7 @@ router.post('/auth', function(req, res, next){
   });
 });
 
-router.post('/verify', function(req, res, next){
+router.get('/verify', function(req, res, next){
   debug("get verify");
   let token = req.body.token || req.query.token || req.headers['token'];
   debug(token);
@@ -78,7 +78,7 @@ router.post('/verify', function(req, res, next){
   if(token != "undefined"){
     jwt.verify(token, process.env.SECRET, function(err, decoded){
       if(err){
-        return res.json({ login: false, message: 'Failed to verify token.' });
+        return res.json({ login: false, message: err.message });
       }else{
         let obj = {
           fullname : decoded.fullname,
