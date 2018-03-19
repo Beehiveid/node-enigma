@@ -35,7 +35,7 @@ router.post('/auth', function(req, res, next){
   let password = req.body.password;
   let obj = {};
 
-  var sql = `select fullname, department, status from users where username = ? and password = ?`;
+  var sql = `select fullname, department, status, avatar from users where username = ? and password = ?`;
   connection.query(sql,[username,password], function(err, rows, fields){
     if (err) throw err
     console.log(rows);
@@ -50,6 +50,7 @@ router.post('/auth', function(req, res, next){
         fullname : user.fullname,
         department : user.department,
         access : AccessLevel.properties[user.status].name,
+        avatar : user.avatar
       }
 
       var token = jwt.sign(payload, process.env.SECRET,{
@@ -60,6 +61,7 @@ router.post('/auth', function(req, res, next){
         fullname : user.fullname,
         department : user.department,
         access : AccessLevel.properties[user.status].name,
+        avatar: user.avatar,
         token : token,
         login : true,
         expIn : 1 //1 days
@@ -84,6 +86,7 @@ router.get('/verify', function(req, res, next){
           fullname : decoded.fullname,
           department : decoded.department,
           access : decoded.access,
+          avatar: decoded.avatar,
           login : true
         }
 
